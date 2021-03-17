@@ -1,11 +1,9 @@
 import React from "react";
-
 import "./ChatRoom.css";
 import useChat from "../useChat";
 
-const ChatRoom = (props) => {
-  const { roomId } = props.match.params;
-  const { messages, sendMessage } = useChat(roomId);
+const ChatRoom = () => {
+  const { messages, sendMessage } = useChat("Calculator");
   const [newMessage, setNewMessage] = React.useState("");
 
   const handleNewMessageChange = (event) => {
@@ -13,16 +11,29 @@ const ChatRoom = (props) => {
   };
 
   const handleSendMessage = () => {
-    sendMessage(newMessage);
+    let result
+    try {
+      result = eval(newMessage)
+      if (isNaN(result)) {
+        result = "Invalid input"
+      }
+    } catch {
+      result = "Invalid input"
+    }
+
+    const msg = `Calculation: ${newMessage} = ${result}`
+    sendMessage(msg);
     setNewMessage("");
   };
 
+  console.log(messages)
+
   return (
     <div className="chat-room-container">
-      <h1 className="room-name">Room: {roomId}</h1>
+      <h1 className="room-name">Calculator Chat</h1>
       <div className="messages-container">
         <ol className="messages-list">
-          {messages.map((message, i) => (
+          {messages.slice(-10).map((message, i) => (
             <li
               key={i}
               className={`message-item ${
@@ -37,11 +48,11 @@ const ChatRoom = (props) => {
       <textarea
         value={newMessage}
         onChange={handleNewMessageChange}
-        placeholder="Write message..."
+        placeholder="Expression to evaluate..."
         className="new-message-input-field"
       />
       <button onClick={handleSendMessage} className="send-message-button">
-        Send
+        Calculate
       </button>
     </div>
   );
