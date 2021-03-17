@@ -5,28 +5,41 @@ import useChat from "../useChat";
 const ChatRoom = () => {
   const { messages, sendMessage } = useChat("Calculator");
   const [newMessage, setNewMessage] = React.useState("");
-
+  const [isValidInput, setIsValidInput] = React.useState(false)
+  
+  // Sanitize inputs
+  const re = new RegExp(/^[-+/*\d+\.]+/gm)
+  
   const handleNewMessageChange = (event) => {
+    if (re.test(event.target.value)) {
+      setIsValidInput(true)
+    } else {
+      setIsValidInput(false)
+    }
     setNewMessage(event.target.value);
   };
 
   const handleSendMessage = () => {
-    let result
+    let sanitizedMessage = "Invalid input"
     try {
-      result = eval(newMessage)
-      if (isNaN(result)) {
-        result = "Invalid input"
+      
+      if (re.test(newMessage)) {
+        sanitizedMessage = eval(newMessage)
       }
-    } catch {
-      result = "Invalid input"
+      
+      if (isNaN(sanitizedMessage)) {
+        sanitizedMessage = "Invalid input"
+      }
+    } catch {}
+
+    if (isNaN(sanitizedMessage)) {
+      sanitizedMessage = "Invalid input"
     }
 
-    const msg = `Calculation: ${newMessage} = ${result}`
+    const msg = `Calculation: ${newMessage} = ${sanitizedMessage}`
     sendMessage(msg);
     setNewMessage("");
   };
-
-  console.log(messages)
 
   return (
     <div className="chat-room-container">
@@ -48,10 +61,15 @@ const ChatRoom = () => {
       <textarea
         value={newMessage}
         onChange={handleNewMessageChange}
-        placeholder="Expression to evaluate..."
+        placeholder="Expression to evaluate...   1+(2*3)"
         className="new-message-input-field"
       />
-      <button onClick={handleSendMessage} className="send-message-button">
+      <button onClick={handleSendMessage} className="send-message-button" 
+      disabled={!isValidInput} 
+      style={{
+        background: !isValidInput ? "gray" : undefined
+      }}
+      >
         Calculate
       </button>
     </div>
