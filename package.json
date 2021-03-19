@@ -1,8 +1,10 @@
 {
   "scripts": {
     "start-client": "react-scripts start",
+    "build": "react-scripts build",
     "start-server": "nodemon ./server/index.js",
-    "start": "concurrently \"npm run start-server\" \"npm run start-client\""
+    "start": "concurrently \"npm run start-server\" \"npm run start-client\"",
+    "serve": "concurrently \"npm run start-server\" \"serve build -p 80\""
   },
   "dependencies": {
     "concurrently": "^6.0.0",
@@ -10,6 +12,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
+    "serve": "^11.3.2",
     "socket.io": "3.0.4",
     "socket.io-client": "3.0.4"
   },

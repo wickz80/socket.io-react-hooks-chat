@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import socketIOClient from "socket.io-client";
 
 const NEW_CHAT_MESSAGE_EVENT = "newChatMessage";
-const SOCKET_SERVER_URL = "http://192.168.0.14:4000";
+const SOCKET_SERVER_URL = "http://ec2-3-142-76-81.us-east-2.compute.amazonaws.com:4000";
 
 const useChat = (roomId) => {
   const [messages, setMessages] = useState([]);
